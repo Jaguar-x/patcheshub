@@ -9,3 +9,9 @@ next-env.d.ts
 .DS_Store
 Thumbs.db
 .openai/
+node_modules/
+.next/
+out/
+.env*
+!.env.example
+*.log
