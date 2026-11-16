@@ -30,7 +30,7 @@ export function OrderStepArt({ step }: { step: number }) {
       <ellipse cx="72" cy="84" rx="43" ry="6" fill="#00204a" opacity=".08" />
       <g stroke="#00204a" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" fill="none">
         <path d="M20 31v12m-6-6h12m98 22v10m-5-5h10" opacity=".45" />
-        {scenes[step]}
+        <g className="patch-order-scene">{scenes[step]}</g>
       </g>
     </svg>
   );

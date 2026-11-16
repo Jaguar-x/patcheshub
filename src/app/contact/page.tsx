@@ -1,3 +1,4 @@
+import { keychainTypes } from "@/content/keychains";
 import { patchTypes } from "@/content/patch-types";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function ContactPage({ searchParams }: { searchParams: Promise<{ product?: string | string[] }> }) {
   const params = await searchParams;
-  const allowedProducts = ["patches", "pins", "coins", "keychains", "multiple", "unsure", ...patchTypes.map(({ id }) => id)];
+  const allowedProducts = ["patches", "pins", "coins", "keychains", "multiple", "unsure", ...patchTypes.map(({ id }) => id), ...keychainTypes.map(({ product }) => product)];
   const initialProduct = typeof params.product === "string" && allowedProducts.includes(params.product) ? params.product : "";
 
   return <>

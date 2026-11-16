@@ -1,9 +1,19 @@
+import { PatchPhotoPrint } from "@/components/sections/patch-photo-print";
+import { CustomerReviews } from "@/components/sections/customer-reviews";
+import { RelatedPatchTypes } from "@/components/sections/related-patch-types";
+import { WhyChoosePatchesHub } from "@/components/sections/why-choose-patcheshub";
+import { PatchBuyingGuide } from "@/components/sections/patch-buying-guide";
+import { PatchPlanning } from "@/components/sections/patch-planning";
+import { PatchFaq } from "@/components/sections/patch-faq";
+import { PatchOrderProcess } from "@/components/sections/patch-order-process";
+import { PatchPortfolioCarousel } from "@/components/sections/patch-portfolio-carousel";
+import { PatchBenefits } from "@/components/sections/patch-showcase";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowIcon } from "@/components/ui/icons";
-import { OrderStepArt } from "@/components/ui/order-step-art";
 
-const quoteUrl = "/contact?product=pvc#project-form";
+
+const quoteUrl = "/quote?product=patches&style=pvc";
 const assetPath = "/assets/products/patches";
 const faqs = [
   ["What are PVC patches made of?", "PVC patches are made from flexible polyvinyl chloride molded into a shape. Raised areas and recessed channels give logos and lettering a distinct outline."],
@@ -25,9 +35,9 @@ const orderSteps = [
 ] as const;
 
 const portfolio = [
-  { file: "pvc-patch-collection.png", title: "Outdoor badge series", alt: "Round, triangular, and shield-shaped outdoor patch concepts" },
-  { file: "pvc-patch-relief.png", title: "Layered mountain shield", alt: "Navy shield patch concept with raised coral and cream artwork" },
-  { file: "pvc-patch-backpack.png", title: "Backpack emblem", alt: "Red and navy mountain patch concept on an olive backpack" },
+  { file: "pvc-patch-collection.png", title: "Outdoor badge series", description: "Compare round, triangular, and shield outlines for a coordinated set. A shared color palette ties the badges together.", alt: "Round, triangular, and shield-shaped outdoor patch concepts" },
+  { file: "pvc-patch-relief.png", title: "Layered mountain shield", description: "Raised coral and cream details separate the mountain artwork from the navy base.", alt: "Navy shield patch concept with raised coral and cream artwork" },
+  { file: "pvc-patch-backpack.png", title: "Backpack emblem", description: "See how the shield fits on an outdoor pack panel and reads against olive fabric.", alt: "Red and navy mountain patch concept on an olive backpack" },
 ] as const;
 
 export function PvcPatchesPage() {
@@ -47,7 +57,6 @@ export function PvcPatchesPage() {
               <p className="pvc-intro">Turn your logo into a flexible rubber patch with crisp outlines, bold colors, and raised details you can feel. Made for bags, uniforms, outdoor gear, and brand merchandise.</p>
               <div className="pvc-actions">
                 <Link className="button button-red" href={quoteUrl}>Get a PVC patch quote <ArrowIcon /></Link>
-                <a className="text-link" href="#pvc-design">Explore design options</a>
               </div>
             </div>
             <figure className="pvc-photo">
@@ -58,7 +67,11 @@ export function PvcPatchesPage() {
       </section>
       <div className="pvc-benefits"><div className="page-container"><span>No minimum order quantity</span><span>Design assistance</span><span>Proof revisions</span></div></div>
 
-      <section id="pvc-design" className="section-space">
+      <PatchBenefits id="pvc" name="PVC patches" />
+
+      <PatchPhotoPrint id="pvc" />
+
+      <section id="pvc-design" className="section-space patch-design-section">
         <div className="page-container patch-page-grid pvc-editorial">
           <figure className="pvc-photo">
             <Image src={`${assetPath}/pvc-patch-relief.png`} alt="Close-up of raised coral and cream details molded into a navy PVC shield patch concept" width={1536} height={1024} sizes="(max-width: 699px) 90vw, 48vw" />
@@ -76,70 +89,30 @@ export function PvcPatchesPage() {
         </div>
       </section>
 
-      <section className="pvc-use section-space">
-        <div className="page-container patch-page-grid pvc-editorial">
-          <div>
-            <p className="eyebrow">On the gear</p>
-            <h2>Give everyday gear a signature.</h2>
-            <p>Use PVC patches to identify a team, personalize a pack, or give a merch collection a recognizable emblem. If your design calls for a stitched texture, explore embroidered patches. For photo detail or gradients, consider printed patches.</p>
-            <div className="patch-related">
-              <Link className="text-link" href="/patches/embroidered">Embroidered patches <ArrowIcon /></Link>
-              <Link className="text-link" href="/patches/printed">Printed patches <ArrowIcon /></Link>
-            </div>
-          </div>
-          <figure className="pvc-photo">
-            <Image src={`${assetPath}/pvc-patch-backpack.png`} alt="Red and navy PVC mountain patch concept mounted on an olive outdoor backpack" width={1536} height={1024} sizes="(max-width: 699px) 90vw, 48vw" />
-          </figure>
-        </div>
-      </section>
+      <RelatedPatchTypes current="pvc" />
+
+      <PatchPlanning id="pvc" />
+      <PatchBuyingGuide id="pvc" />
 
       <section className="section-space pvc-portfolio" id="pvc-portfolio" aria-labelledby="pvc-portfolio-title">
         <div className="page-container">
           <p className="eyebrow">Design portfolio</p>
           <h2 id="pvc-portfolio-title">PVC patch concepts</h2>
           <p className="pvc-section-intro">Explore three concept studies for custom rubber patches, from a coordinated badge collection to a single emblem designed for outdoor gear.</p>
-          <div className="pvc-card-grid">
-            {portfolio.map(({ file, title, alt }) => (
-              <article key={file}>
-                <h3>{title}</h3>
-                <div className="pvc-photo">
-                  <Image src={`${assetPath}/${file}`} alt={alt} width={1536} height={1024} sizes="(max-width: 699px) 90vw, 30vw" />
-                </div>
-              </article>
-            ))}
-          </div>
+          <PatchPortfolioCarousel labelId="pvc-portfolio-title" slides={portfolio.map(({ file, title, description, alt }) => ({
+            title,
+            description,
+            image: { src: `${assetPath}/${file}`, alt, width: 1536, height: 1024 },
+          }))} />
         </div>
       </section>
 
-      <section className="section-space pvc-order" id="pvc-order" aria-labelledby="pvc-order-title">
-        <div className="page-container">
-          <p className="eyebrow">Order process</p>
-          <h2 id="pvc-order-title">How to order custom PVC patches</h2>
-          <p className="pvc-section-intro">Start with the details you have. We’ll help you work through the choices before you approve the design.</p>
-          <ol className="pvc-card-grid pvc-order-grid">
-            {orderSteps.map(([title, description], index) => (
-              <li key={title}>
-                <div className="pvc-step-visual">
-                  <span className="pvc-step-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                  <OrderStepArt step={index} />
-                </div>
-                <h3>{title}</h3>
-                <p>{description}</p>
-              </li>
-            ))}
-          </ol>
-          <Link className="button button-red" href={quoteUrl}>Start your PVC patch order <ArrowIcon /></Link>
-        </div>
-      </section>
+      <PatchOrderProcess name="PVC patches" quoteUrl={quoteUrl} steps={orderSteps} sectionId="pvc-order" />
 
-      <section className="section-space" aria-labelledby="pvc-faq">
-        <div className="page-container patch-page-grid pvc-editorial pvc-faq">
-          <div><p className="eyebrow">Before you order</p><h2 id="pvc-faq">PVC patch questions</h2></div>
-          <div>{faqs.map(([question, answer]) => (
-            <details key={question}><summary>{question}</summary><p>{answer}</p></details>
-          ))}</div>
-        </div>
-      </section>
+      <WhyChoosePatchesHub />
+
+      <CustomerReviews product="pvc" />
+      <PatchFaq name="PVC patches" questions={faqs} />
 
       <section className="pvc-quote">
         <div className="page-container patch-page-grid pvc-editorial">

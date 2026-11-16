@@ -33,7 +33,7 @@ export function FeaturedProducts() {
             </article>
           ))}
         </div>
-        <div className="collection-footer"><p>Your artwork. Your shape. <strong>Your kind of patch.</strong></p><Link className="text-link" href="/contact">Let’s create yours <ArrowIcon /></Link></div>
+        <div className="collection-footer"><p>Your artwork. Your shape. <strong>Your kind of patch.</strong></p><Link className="text-link" href="/quote?product=patches">Let’s create yours <ArrowIcon /></Link></div>
       </div>
     </section>
   );

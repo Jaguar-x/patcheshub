@@ -1,5 +1,6 @@
 "use client";
 
+import { keychainTypes } from "@/content/keychains";
 import { patchTypes } from "@/content/patch-types";
 import { useState, type FormEvent } from "react";
 import { ArrowIcon, CheckIcon } from "@/components/ui/icons";
@@ -32,6 +33,7 @@ export function ContactForm({ initialProduct = "" }: ContactFormProps) {
           <option value="pins">Custom pins</option>
           <option value="coins">Custom coins</option>
           <option value="keychains">Custom keychains</option>
+          {keychainTypes.map(({ product, name }) => <option key={product} value={product}>{name}</option>)}
           <option value="multiple">A mix of products</option>
           <option value="unsure">Help me choose</option>
         </select>
@@ -40,6 +42,6 @@ export function ContactForm({ initialProduct = "" }: ContactFormProps) {
     </div>
     <div className="form-bottom"><p><CheckIcon /> No minimum order quantity.<br /><span>No pressure to have it all figured out.</span></p><button type="submit" className="button button-red">Preview my inquiry <ArrowIcon /></button></div>
     <p className="form-preview-note" id="form-preview-note">Form preview only. Sending is not enabled, and your details will not be submitted or stored.</p>
-    {review && <div className="form-review" role="status" aria-live="polite"><strong>Looking good, {review.name}.</strong><p>Your {review.product === "unsure" ? "project" : review.product === "multiple" ? "product collection" : patchTypes.find(({ id }) => id === review.product)?.name ?? review.product} inquiry is ready to send once messaging is available. Nothing has been sent or saved.</p><button type="button" className="text-link" onClick={() => { setReview(null); document.getElementById("name")?.focus(); }}>Keep editing <ArrowIcon /></button></div>}
+    {review && <div className="form-review" role="status" aria-live="polite"><strong>Looking good, {review.name}.</strong><p>Your {review.product === "unsure" ? "project" : review.product === "multiple" ? "product collection" : patchTypes.find(({ id }) => id === review.product)?.name ?? keychainTypes.find(({ product }) => product === review.product)?.name ?? review.product} inquiry is ready to send once messaging is available. Nothing has been sent or saved.</p><button type="button" className="text-link" onClick={() => { setReview(null); document.getElementById("name")?.focus(); }}>Keep editing <ArrowIcon /></button></div>}
   </form>;
 }

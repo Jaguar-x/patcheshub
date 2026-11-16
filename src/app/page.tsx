@@ -1,3 +1,4 @@
+import { CustomerReviews } from "@/components/sections/customer-reviews";
 import Image from "next/image";
 import Link from "next/link";
 import { ProductOverview } from "@/components/sections/product-overview";
@@ -36,7 +37,7 @@ export default function HomePage() {
             <h2 id="identity-heading">A little object.<br />A lot of<br /><span className="serif-word">belonging.</span></h2>
             <p>The patch that says you’re part of the crew. The pin that starts a conversation. The coin that holds a memory.</p>
             <p>We’re here for the meaning behind the merchandise—and the details that make it unmistakably yours.</p>
-            <Link className="text-link" href="/contact">Tell us your story <ArrowIcon /></Link>
+            <Link className="text-link" href="/quote">Tell us your story <ArrowIcon /></Link>
           </div>
         </div>
       </section>
@@ -55,21 +56,44 @@ export default function HomePage() {
               </article>
             ))}
           </div>
-          <div className="process-footnote"><span>One piece or a whole collection. There’s room for your idea.</span><Link href="/contact#project-form" className="text-link">Let’s get it started <ArrowIcon /></Link></div>
+          <div className="process-footnote"><span>One piece or a whole collection. There’s room for your idea.</span><Link href="/quote" className="text-link">Let’s get it started <ArrowIcon /></Link></div>
         </div>
       </section>
 
+      <CustomerReviews />
+
       <section id="questions" className="faq-section section-space" aria-labelledby="faq-heading">
         <div className="page-container faq-grid">
-          <div><p className="eyebrow"><span className="tiny-square" /> The things you’re wondering</p><h2 id="faq-heading">Curious?<br /><span className="serif-word">Good.</span><span className="question-doodle" aria-hidden="true">?</span></h2><p className="faq-intro">A few answers before we make something together.</p><Link href="/contact" className="text-link">Ask us anything <ArrowIcon /></Link></div>
+          <div><p className="eyebrow"><span className="tiny-square" /> The things you’re wondering</p><h2 id="faq-heading">Curious?<br /><span className="serif-word">Good.</span><span className="question-doodle" aria-hidden="true">?</span></h2><p className="faq-intro">A few answers before we make something together.</p></div>
           <FaqList />
+        </div>
+      </section>
+
+      <section className="section-space patch-question-section" aria-labelledby="patch-question-title">
+        <div className="page-container patch-question-layout">
+          <div className="patch-question-copy">
+            <h2 id="patch-question-title">Have a question<br />about <em className="serif-word">patches?</em></h2>
+            <p>Tell us what you’re making and where the patch will go. A sketch or a few words is enough to start.</p>
+            <ul className="patch-question-prompts" aria-label="Questions you can ask">
+              <li>Will my logo work in embroidery?</li>
+              <li>Which backing suits my jacket?</li>
+              <li>What size should I choose?</li>
+            </ul>
+            <Link href="/contact?product=patches#project-form" className="button button-red">Ask us about patches <ArrowIcon /></Link>
+          </div>
+          <div className="patch-print patch-question-print">
+            <figure className="patch-print-frame">
+              <Image src="/assets/products/patches/embroidered-lifestyle.webp" alt="Round embroidered patch with cream lettering on a navy work jacket" width={1200} height={800} sizes="(max-width: 699px) 82vw, 40vw" />
+              <figcaption>Embroidered jacket patch concept</figcaption>
+            </figure>
+          </div>
         </div>
       </section>
 
       <section className="project-banner" aria-labelledby="project-banner-heading">
         <div className="page-container project-banner-inner">
           <div><p className="eyebrow">Your next great little thing starts here</p><h2 id="project-banner-heading">Big ideas.<br /><span>Start <em>small.</em></span><SparkIcon /></h2></div>
-          <div className="banner-action"><Link href="/contact#project-form" className="banner-circle-link" aria-label="Start your custom merchandise project"><ArrowIcon /></Link><p>Make your mark.<br />We’ll help you get there.</p></div>
+          <div className="banner-action"><Link href="/quote" className="banner-circle-link" aria-label="Start your custom merchandise project"><ArrowIcon /></Link><p>Make your mark.<br />We’ll help you get there.</p></div>
         </div>
         <div className="banner-bottom page-container"><span>NO MINIMUMS. DESIGN ASSISTANCE. ALL YOURS.</span><span>↗ A little idea can go a long way.</span></div>
       </section>

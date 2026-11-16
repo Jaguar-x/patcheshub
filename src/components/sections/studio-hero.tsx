@@ -10,7 +10,7 @@ export function StudioHero() {
           <p className="eyebrow"><span className="tiny-square" /> Custom goods. Uncommon character.</p>
           <h1 id="hero-heading">Small things.<br /><span className="hero-big">BIG <span className="energy-word">ENERGY.<svg viewBox="0 0 420 30" fill="none" aria-hidden="true"><path d="M8 16C120 3 250 3 410 14M38 25C165 14 279 15 380 22" stroke="currentColor" strokeWidth="4" strokeLinecap="round" /></svg></span></span></h1>
           <p className="studio-hero-description">Your logo. Your story. Something they’ll keep.<br />{" "}Patches, pins, coins, and keychains with a whole lot of personality.</p>
-          <div className="studio-hero-actions"><Link href="/contact#project-form" className="button button-red">Let’s make your thing <ArrowIcon /></Link><a href="#products" className="hero-explore"><span>Explore<br />the possibilities</span><span className="circle-arrow"><ArrowIcon /></span></a></div>
+          <div className="studio-hero-actions"><Link href="/quote" className="button button-red">Let’s make your thing <ArrowIcon /></Link><a href="#products" className="hero-explore"><span>Explore<br />the possibilities</span><span className="circle-arrow"><ArrowIcon /></span></a></div>
           <div className="studio-hero-benefits"><span><CheckIcon /> No minimums. Really.</span><span><CheckIcon /> Design assistance.</span></div>
         </div>
         <StudioCollage />

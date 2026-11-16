@@ -43,6 +43,6 @@ export const productCategories: readonly ProductCategory[] = [
     image: "/assets/products/keychains/sunrise-keychain-concept.png",
     imageAlt: "Navy PVC and metal keychain concepts with a red sunrise motif",
     description: "Take your identity along. Made for everyday encounters.",
-    materials: ["Metal", "PVC"],
+    materials: ["Metal", "PVC", "Embroidered"],
   },
 ];

@@ -32,7 +32,7 @@ export function MaterialExplorer() {
         </div>
         {materials.map((material, index) => <div className={`material-panel material-${material.color}`} key={material.id} id={`${id}-panel-${index}`} role="tabpanel" aria-labelledby={`${id}-tab-${index}`} tabIndex={0} hidden={activeIndex !== index}>
           <div className="material-image"><span className="material-note">{material.note}</span><Image src={material.image} alt={material.alt} width={900} height={900} sizes="(max-width: 699px) 90vw, 45vw" /><span className="material-image-caption">A closer look / illustrative concept</span><span className="material-cross" aria-hidden="true">+</span></div>
-          <div className="material-copy"><p className="eyebrow">The material makes the mark</p><h3>{material.title}</h3><p>{material.description}</p><ul>{material.traits.map((trait) => <li key={trait}><CheckIcon />{trait}</li>)}</ul><Link href={`/contact?product=${material.product}#project-form`} className="button button-navy">Make it {material.name.toLowerCase()} <ArrowIcon /></Link></div>
+          <div className="material-copy"><p className="eyebrow">The material makes the mark</p><h3>{material.title}</h3><p>{material.description}</p><ul>{material.traits.map((trait) => <li key={trait}><CheckIcon />{trait}</li>)}</ul><Link href={`/quote?product=${material.product}`} className="button button-navy">Make it {material.name.toLowerCase()} <ArrowIcon /></Link></div>
         </div>)}
       </div>
     </section>

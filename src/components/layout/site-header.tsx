@@ -1,13 +1,13 @@
 "use client";
 
-import { ProductIllustration } from "@/components/ui/product-illustration";
+import { keychainTypes } from "@/content/keychains";
 import { patchTypes } from "@/content/patch-types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { BrandLogo } from "@/components/brand/brand-logo";
 import { productCategories } from "@/content/products";
-import { ArrowIcon } from "@/components/ui/icons";
+import { ArrowIcon, SparkIcon } from "@/components/ui/icons";
 
 function DropdownChevron() {
   return (
@@ -19,50 +19,48 @@ function DropdownChevron() {
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const [group, setGroup] = useState<"patches" | "products" | null>(null);
-  const [previewIndex, setPreviewIndex] = useState(0);
-  const productsOpen = group !== null;
-  const items = group === "patches"
-    ? patchTypes.map((product) => ({
-        kind: product.id, name: product.name, description: product.description, href: `/patches/${product.id}`,
-      }))
-    : productCategories.map((product) => ({
-        kind: product.slug, name: product.name, description: product.description, href: `/#${product.slug}`,
-      }));
-  const preview = items[previewIndex] ?? items[0];
+  const [productsOpen, setProductsOpen] = useState(false);
+  const categories = productCategories.map((product) => ({
+    kind: product.slug, name: product.slug === "pins" ? "Custom Pins" : product.name,
+    href: product.slug === "coins" ? "/coins" : product.slug === "pins" ? "/pins" : `/#${product.slug}`,
+  }));
+  const promotionalProducts = [
+    ...categories.filter(({ kind }) => kind !== "patches" && kind !== "keychains"),
+    ...keychainTypes.map(({ product, id, name }) => ({ kind: product, name, href: `/keychains/${id}` })),
+  ];
+  const patches = patchTypes.map((product) => ({
+    kind: product.id, name: product.name, href: `/patches/${product.id}`,
+  }));
   const [mobileOpen, setMobileOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const mobileRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const productButtonRef = useRef<HTMLButtonElement>(null);
-  const patchButtonRef = useRef<HTMLButtonElement>(null);
 
-  function openGroup(nextGroup: "patches" | "products") {
-    setPreviewIndex(0);
-    setGroup(nextGroup);
+  function openProducts() {
+    setProductsOpen(true);
   }
 
-  function handleGroupClick(nextGroup: "patches" | "products", event: MouseEvent<HTMLButtonElement>) {
+  function handleProductsClick(event: MouseEvent<HTMLButtonElement>) {
     const mouseHover = event.detail > 0 && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    setPreviewIndex(0);
-    setGroup((currentGroup) => currentGroup === nextGroup && !mouseHover ? null : nextGroup);
+    setProductsOpen((open) => mouseHover || !open);
   }
 
-  function closeMenus() { setGroup(null); setMobileOpen(false); }
+  function closeMenus() { setProductsOpen(false); setMobileOpen(false); }
 
   useEffect(() => {
     function closeOutside(event: PointerEvent) {
-      if (!headerRef.current?.contains(event.target as Node)) setGroup(null);
+      if (!headerRef.current?.contains(event.target as Node)) setProductsOpen(false);
     }
     function onEscape(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
       if (mobileOpen) menuButtonRef.current?.focus();
-      else if (group) (group === "patches" ? patchButtonRef : productButtonRef).current?.focus();
+      else if (productsOpen) productButtonRef.current?.focus();
       closeMenus();
     }
     function onResize() {
       if (window.innerWidth >= 900) setMobileOpen(false);
-      else setGroup(null);
+      else setProductsOpen(false);
     }
     document.addEventListener("pointerdown", closeOutside);
     document.addEventListener("keydown", onEscape);
@@ -72,7 +70,7 @@ export function SiteHeader() {
       document.removeEventListener("keydown", onEscape);
       window.removeEventListener("resize", onResize);
     };
-  }, [mobileOpen, group]);
+  }, [mobileOpen, productsOpen]);
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -81,7 +79,7 @@ export function SiteHeader() {
     mobileRef.current?.querySelector<HTMLElement>("a, button")?.focus();
     function trapFocus(event: KeyboardEvent) {
       if (event.key !== "Tab") return;
-      const items = Array.from(mobileRef.current?.querySelectorAll<HTMLElement>("a[href], button") ?? []);
+      const items = Array.from(mobileRef.current?.querySelectorAll<HTMLElement>("a[href], button, summary") ?? []).filter((item) => item.getClientRects().length > 0);
       const first = items[0];
       const last = items[items.length - 1];
       if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
@@ -99,7 +97,7 @@ export function SiteHeader() {
       ref={headerRef}
       className="site-header"
       onPointerLeave={(event) => {
-        if (event.pointerType === "mouse") setGroup(null);
+        if (event.pointerType === "mouse") setProductsOpen(false);
       }}
     >
       <div className="page-container header-inner">
@@ -107,64 +105,75 @@ export function SiteHeader() {
         <nav aria-label="Main navigation" className="desktop-nav">
           <Link href="/" aria-current={pathname === "/" ? "page" : undefined} onClick={closeMenus}>Home</Link>
           <button
-            ref={patchButtonRef}
-            type="button"
-            aria-expanded={group === "patches"}
-            aria-controls={group === "patches" ? "product-navigation" : undefined}
-            onPointerEnter={(event) => {
-              if (event.pointerType === "mouse") openGroup("patches");
-            }}
-            onClick={(event) => handleGroupClick("patches", event)}
-          >Custom patches <DropdownChevron /></button>
-          <button
             ref={productButtonRef}
             type="button"
-            aria-expanded={group === "products"}
-            aria-controls={group === "products" ? "product-navigation" : undefined}
+            aria-expanded={productsOpen}
+            aria-controls={productsOpen ? "product-navigation" : undefined}
             onPointerEnter={(event) => {
-              if (event.pointerType === "mouse") openGroup("products");
+              if (event.pointerType === "mouse") openProducts();
             }}
-            onClick={(event) => handleGroupClick("products", event)}
+            onClick={handleProductsClick}
           >Products <DropdownChevron /></button>
-          <Link href="/#materials" onClick={closeMenus}>Materials</Link>
-          <Link href="/#process" onClick={closeMenus}>How it works</Link>
+          <Link href="/quote" aria-current={pathname === "/quote" ? "page" : undefined} onClick={closeMenus}>Get a Quote</Link>
+          <Link href="/about" aria-current={pathname === "/about" ? "page" : undefined} onClick={closeMenus}>About Company</Link>
+          <Link href="/blog" aria-current={pathname === "/blog" ? "page" : undefined} onClick={closeMenus}>Blog</Link>
           <Link href="/contact" aria-current={pathname === "/contact" ? "page" : undefined} onClick={closeMenus}>Contact us</Link>
         </nav>
-        <Link className="button button-navy header-cta" href="/contact#project-form" onClick={closeMenus}>Let’s make it <ArrowIcon /></Link>
-        <button ref={menuButtonRef} className="menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded={mobileOpen} aria-controls="mobile-navigation" onClick={() => { setMobileOpen(true); setGroup(null); }}><span /><span /></button>
+        <Link className="button button-navy header-cta" href="/quote" onClick={closeMenus}>Let’s make it <ArrowIcon /></Link>
+        <button ref={menuButtonRef} className="menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded={mobileOpen} aria-controls="mobile-navigation" onClick={() => { setMobileOpen(true); setProductsOpen(false); }}><span /><span /></button>
       </div>
-      {productsOpen && <div id="product-navigation" className="mega-menu" onBlur={(event) => { if (!headerRef.current?.contains(event.relatedTarget as Node)) setGroup(null); }}>
-        <div className="page-container illustrated-menu">
-          <div className="illustrated-menu-links">
-            <p className="eyebrow">{group === "patches" ? "Custom patches" : "Browse products"}</p>
-            {items.map((item, index) => (
-              <Link key={item.kind} href={item.href} aria-current={pathname === item.href ? "page" : undefined} onClick={closeMenus}
-                onPointerEnter={() => setPreviewIndex(index)} onFocus={() => setPreviewIndex(index)}
-                data-preview-active={item.kind === preview.kind}>
-                {item.name}<ArrowIcon />
-              </Link>
+      {productsOpen && <div id="product-navigation" className="mega-menu" onBlur={(event) => { if (!headerRef.current?.contains(event.relatedTarget as Node)) setProductsOpen(false); }}>
+        <div className="page-container product-menu-grid">
+          <section>
+            <h2><SparkIcon /> Featured Products</h2>
+            {patches.filter(({ kind }) => kind === "embroidered" || kind === "pvc").map((patch) => (
+              <Link key={patch.kind} href={patch.href} onClick={closeMenus}>{patch.name}</Link>
             ))}
-          </div>
-          <div className="illustrated-menu-preview" aria-hidden="true">
-            <ProductIllustration kind={preview.kind} />
-            <strong>{preview.name}</strong>
-            <p>{preview.description}</p>
-          </div>
+            <Link className="product-menu-all" href="/#products" onClick={closeMenus}>View all products</Link>
+          </section>
+          <section>
+            <h2><SparkIcon /> Custom Patches</h2>
+            {patches.map((patch) => (
+              <Link key={patch.kind} href={patch.href} aria-current={pathname === patch.href ? "page" : undefined}
+                onClick={closeMenus}>{patch.name}</Link>
+            ))}
+          </section>
+          <section>
+            <h2><SparkIcon /> Promotional Products</h2>
+            {promotionalProducts.map((product) => (
+              <Link key={product.kind} href={product.href} aria-current={pathname === product.href ? "page" : undefined} onClick={closeMenus}>{product.name}</Link>
+            ))}
+          </section>
+          <section className="product-menu-guides">
+            <h2><SparkIcon /> Patch Styles</h2>
+            <Link href="/blog/choosing-a-patch-material" onClick={closeMenus}>Patch materials</Link>
+            <Link href="/blog/choosing-a-patch-backing" onClick={closeMenus}>Patch backings</Link>
+          </section>
         </div>
       </div>}
       {mobileOpen && <div ref={mobileRef} id="mobile-navigation" className="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation">
         <div className="mobile-menu-top"><span className="eyebrow">Explore PatchesHub</span><button type="button" aria-label="Close navigation menu" onClick={() => { closeMenus(); menuButtonRef.current?.focus(); }}>✕</button></div>
         <nav aria-label="Mobile navigation">
           <Link href="/" onClick={closeMenus}>Home <ArrowIcon /></Link>
-          <Link href="/#products" onClick={closeMenus}>Products <ArrowIcon /></Link>
-          <p className="eyebrow mobile-patch-label">Custom patches</p>
-          <div className="mobile-products">{patchTypes.map((product) => <Link key={product.id} href={`/patches/${product.id}`} aria-current={pathname === `/patches/${product.id}` ? "page" : undefined} onClick={closeMenus}>{product.name}</Link>)}</div>
-          <div className="mobile-products">{productCategories.map((product) => <Link key={product.slug} href={`/#${product.slug}`} onClick={closeMenus}>{product.name}</Link>)}</div>
-          <Link href="/#materials" onClick={closeMenus}>The details <ArrowIcon /></Link>
-          <Link href="/#process" onClick={closeMenus}>How it works <ArrowIcon /></Link>
+          <details className="mobile-product-menu">
+            <summary>Products <DropdownChevron /></summary>
+            <details className="patch-submenu mobile-patch-label">
+              <summary>Custom Patches <DropdownChevron /></summary>
+              <div className="mobile-products">
+                {patches.map((patch) => <Link key={patch.kind} href={patch.href} aria-current={pathname === patch.href ? "page" : undefined} onClick={closeMenus}>{patch.name}</Link>)}
+              </div>
+            </details>
+            <div className="mobile-products">
+              {promotionalProducts.map((product) => <Link key={product.kind} href={product.href} aria-current={pathname === product.href ? "page" : undefined} onClick={closeMenus}>{product.name}</Link>)}
+              <Link href="/#products" onClick={closeMenus}>All products</Link>
+            </div>
+          </details>
+          <Link href="/quote" aria-current={pathname === "/quote" ? "page" : undefined} onClick={closeMenus}>Get a Quote <ArrowIcon /></Link>
+          <Link href="/about" aria-current={pathname === "/about" ? "page" : undefined} onClick={closeMenus}>About Company <ArrowIcon /></Link>
+          <Link href="/blog" aria-current={pathname === "/blog" ? "page" : undefined} onClick={closeMenus}>Blog <ArrowIcon /></Link>
           <Link href="/contact" onClick={closeMenus}>Contact <ArrowIcon /></Link>
         </nav>
-        <Link href="/contact#project-form" className="button button-red" onClick={closeMenus}>Start your project <ArrowIcon /></Link>
+        <Link href="/quote" className="button button-red" onClick={closeMenus}>Start your project <ArrowIcon /></Link>
         <p className="mobile-menu-note">Your idea belongs out in the world.</p>
       </div>}
     </header>

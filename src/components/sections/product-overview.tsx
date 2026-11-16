@@ -14,7 +14,7 @@ export function ProductOverview() {
         <div className="collection-grid">
           {productCategories.map((product, index) => (
             <article id={product.slug} key={product.slug} className={`collection-card collection-${product.slug}`}>
-              <Link href={`/contact?product=${product.slug}#project-form`} className="collection-link" aria-label={`Explore custom ${product.name.toLowerCase()} and request a quote`}>
+              <Link href={product.slug === "coins" || product.slug === "pins" || product.slug === "keychains" ? `/${product.slug}` : `/quote?product=${product.slug}`} className="collection-link" aria-label={`Explore custom ${product.name.toLowerCase()} and request a quote`}>
                 <div className="collection-photo">
                   <span className="collection-number">0{index + 1} /</span>
                   <div className="collection-image-frame"><Image src={product.image} alt={product.imageAlt} width={700} height={700} sizes="(max-width: 599px) 44vw, (max-width: 899px) 45vw, 24vw" /></div>
@@ -27,7 +27,7 @@ export function ProductOverview() {
             </article>
           ))}
         </div>
-        <div className="product-section-note"><p>Still in the “I have an idea” stage? You’re in the right place.</p><Link href="/contact">Let’s figure it out <ArrowIcon /></Link></div>
+        <div className="product-section-note"><p>Still in the “I have an idea” stage? You’re in the right place.</p><Link href="/quote">Let’s figure it out <ArrowIcon /></Link></div>
       </div>
     </section>
   );

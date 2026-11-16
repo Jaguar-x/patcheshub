@@ -1,0 +1,65 @@
+.section {
+  background: #e8eff4;
+}
+
+.carousel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 700px) {
+  .carousel {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .card {
+    animation: review-in 350ms ease-out both;
+  }
+}
+
+@keyframes review-in {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.card {
+  padding: clamp(20px, 3vw, 32px);
+  border: 1px solid var(--color-line);
+  border-radius: 16px;
+  background: #fffdf8;
+  overflow-wrap: anywhere;
+}
+
+.stars {
+  color: #925b06;
+  letter-spacing: .1em;
+}
+
+.card figure,
+.card blockquote {
+  margin: 0;
+}
+
+.card blockquote {
+  margin-block: 12px 20px;
+}
+
+.card figcaption {
+  display: grid;
+  gap: 4px;
+}
+
+.card figcaption span,
+.empty {
+  color: var(--color-muted);
+}
+
+.empty {
+  margin-top: 18px;
+}
